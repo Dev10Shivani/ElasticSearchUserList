@@ -22,8 +22,13 @@ public class UIController {
 	private ElasticSearchQuery elasticSearchQuery;
 
 	@GetMapping("/")
-	public String viewHomePage(@PathVariable(value = "keyword") String keyword, Model model) throws IOException {
-		model.addAttribute("listUserDocuments", elasticSearchQuery.searchAllDocuments());
+	public String viewHomePage(Model model, String keyword) throws IOException {
+		System.out.println("keyword : " + keyword);
+		if (keyword != null) {
+			model.addAttribute("listUserDocuments", elasticSearchQuery.searchByKeyword(keyword));
+		} else {
+			model.addAttribute("listUserDocuments", elasticSearchQuery.searchAllDocuments());
+		}
 		return "index.html";
 	}
 
@@ -69,18 +74,4 @@ public class UIController {
 		model.addAttribute("userdata", user);
 		return "showUserDocument.html";
 	}
-	
-	
-	@GetMapping("/searchUser/{keyword}")
-	public String searchUser(@PathVariable(value = "keyword") String keyword, Model model) throws IOException {
-
-		if (keyword != null) {
-			model.addAttribute("userlist", elasticSearchQuery.searchByKeyword(keyword));
-		} else {
-			model.addAttribute("userlist", elasticSearchQuery.searchAllDocuments());
-		}
-		return "redirect:/";
-	}
-	 
-
 }

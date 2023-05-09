@@ -12,7 +12,6 @@
     
     <style>
 	#users {
-		/* font-family: Arial, Helvetica, sans-serif; */
 		border-collapse: collapse;
 		width: 100%;
 		font-size: 1rem;
@@ -25,7 +24,7 @@
 	    outline: 0 !important;
 	    border-color: initial;
 	    box-shadow: none;
-	} 
+	}
 	table th:nth-child(3), td:nth-child(3) {
   		display: none;
 	}
@@ -43,30 +42,32 @@
 
 					<div class="row">
 						<div class="col-md-2 mb-5">
-							<a th:href="@{/showCreateUserForm}" class="btn btn-primary">Create
-								New User</a>
+							<a th:href="@{/showCreateUserForm}" class="btn btn-primary">Create New User</a>
 						</div>
-						<form th:action="@{/searchUser/{keyword}(keyword=${datatable-search-input})}" method="get">
-						<div class="col-md-10 mb-5">
+
+						<div class="col-md-9 mb-5">
+							<form th:action="@{/}" method="get">
 								<div class="input-group">
-									<!-- <span class="input-group-prepend">
+									<span class="input-group-prepend">
 										<div class="input-group-text bg-transparent border-right-0">
 											<i class="fa fa-search"></i>
 										</div>
-									</span> --> <input class="form-control py-2 border-left-0 border"
-										type="search" Placeholder="..." id="datatable-search-input">
-									<!-- <span class="input-group-append"> --><button class="btn btn-outline-secondary border-left-0 border"
-										type="button">Search</button> </span>
+									</span> 
+										<input class="form-control py-2 border-left-0 border" type="search" name ="keyword" Placeholder="..." >
+									<span class="input-group-append">
+										<button class="btn btn-outline-secondary border-left-0 border" type="submit">Search</button> 
+									</span>
 								</div>
-							</div>
 							</form>
+						</div>
+						
+						<div class="col-md-1 mt-2 pb-4">
+							<a href="/" class="fas fa-home"></a>
+						</div>
 					</div>
 
 					<div id="datatable" class="datatable">
-						<div
-							class="datatable-inner table-responsive ps ps--active-x ps--active-y"
-							style="overflow: auto; position: relative;">
-
+						<div class="datatable-inner table-responsive ps ps--active-x ps--active-y" style="overflow: auto; position: relative;">
 							<table id="users" class="table datatable-table">
 								<thead class="datatable-header">
 									<tr>
@@ -89,106 +90,17 @@
 									</tr>
 								</tbody>
 							</table>
-
-						<!-- 	<div class="datatable-pagination">
-								<div class="datatable-select-wrapper">
-									<p class="datatable-select-text">Rows per page:</p>
-									<div id="select-wrapper-372999" class="select-wrapper">
-										<div class="form-outline">
-											<input
-												class="form-control select-input placeholder-active active"
-												type="text" role="listbox" aria-multiselectable="false"
-												aria-disabled="false" aria-haspopup="true"
-												aria-expanded="false" readonly="true"><span
-												class="select-arrow"></span>
-											<div class="form-notch">
-												<div class="form-notch-leading" style="width: 9px;"></div>
-												<div class="form-notch-middle" style="width: 0px;"></div>
-												<div class="form-notch-trailing"></div>
-											</div>
-											<div class="form-label select-fake-value">10</div>
-										</div>
-										<select name="entries"
-											class="datatable-select select select-initialized">
-											<option value="10" selected="">10</option>
-											<option value="25">25</option>
-											<option value="50">50</option>
-											<option value="200">200</option>
-										</select>
-									</div>
-								</div>
-								<div class="datatable-pagination-nav">1 - 10 of 10</div>
-								<div class="datatable-pagination-buttons">
-
-									<button data-mdb-ripple-color="dark"
-										class="btn btn-link datatable-pagination-button datatable-pagination-left"
-										disabled="true">
-										<i class="fa fa-chevron-left"></i>
-									</button>
-									<button data-mdb-ripple-color="dark"
-										class="btn btn-link datatable-pagination-button datatable-pagination-right"
-										disabled="true">
-										<i class="fa fa-chevron-right"></i>
-									</button>
-
-								</div>
-							</div> -->
-<!--  -->
 						</div>
 					</div>
+					
 				</section>
 			</div>
 		</section>
 	</div>
 
-	<!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- <script src="js/script.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  	
-<!--   	<script th:inline="javascript">
-  	
-  		var searchUsers = [[${userlist}]];
-  		
-  		$('#datatable-search-input').on('keyup', function(){
-  			var value = $(this).val();
-  			console.log('Value = '+value);
-  			var data = FilterFunction(value, searchUsers)
-  			rebuildTable(data);
-  		});
-  		
-  		function FilterFunction(value, data){
-  			var filterData = [];
-  			
-  			for(var i=0; i < data.length; i++){
-  				value = value.toLowerCase();
-  				
-  				var fname = data[i].firstNametoLowerCase();
-  				var lname = data[i].lirstNametoLowerCase();
-  				
-  				if(fname.includes(value) || lname.includes(value)){
-  					filterData.push(data[i]);
-  				}
-  			}
-  			return filterData;
-  		}
-  		
-  		function rebuildTable(data){
-  			var table = document.getElementById('users')
-  			table.innerHTML=''
-  			for(var i=0; i < data.length; i++){
-  				var row = '<tr>
-  								<td>${data[i].id}</td>
-  								<td>${data[i].firstName}</td>
-  								<td>${data[i].lasttName}</td>
-  								<td>${data[i].email}</td>
-  								<td>${data[i].mobileNumber}</td>
-  						  </tr>'
-  				table.innerHTML += row
-  			}
-  		}
-  	</script> -->
   </body>
 </html>

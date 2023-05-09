@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.elasticsearch.core.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.es.elasticsearch.entity.User;
@@ -46,21 +48,21 @@ public class ElasticSearchQuery {
 		List<Hit> hits = searchResponse.hits().hits();
 		List<User> users = new ArrayList<>();
 		for (Hit object : hits) {
-			System.out.print(((User) object.source()));
+			// System.out.print(((User) object.source()));
 			users.add((User) object.source());
 		}
 		return users;
 	}
-	
+
 	public List<User> searchByKeyword(String keyword) throws IOException {
-		SearchRequest searchRequest =  SearchRequest.of(s -> s.index(indexName).query(q -> q.multiMatch(
-		         t -> t .fields("id", "firstName", "lastName", "email", "mobileNumber").query(keyword)))
-		         );
-		SearchResponse searchResponse =  elasticsearchClient.search(searchRequest, User.class);
+		SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName)
+				.query(q -> q.multiMatch(t -> t.fields("firstName", "lastName", "email").query(keyword))));
+		SearchResponse searchResponse = elasticsearchClient.search(searchRequest, User.class);
 		List<Hit> hits = searchResponse.hits().hits();
 		List<User> users = new ArrayList<>();
-		for(Hit object : hits){
-			users.add((User) object.source()); 
+		for (Hit object : hits) {
+			// System.out.print(((User) object.source()));
+			users.add((User) object.source());
 		}
 		return users;
 	}
@@ -90,6 +92,17 @@ public class ElasticSearchQuery {
 		System.out.println("User not found");
 		return new StringBuilder("User with id " + deleteResponse.id() + " does not exist.").toString();
 
+	}
+
+	/*
+	 * public List<User> findAllWithSort(String field, String Direction){
+	 * Sort.by(field).ascending() : Sort.by(field).descending(); return
+	 * user.findAll(sort); }
+	 */
+
+	public Page<User> findPage(int pageNumber) {
+		Pageable pagable = PageRequest.of(pageNumber - 1, 10);
+		return null;
 	}
 
 }
