@@ -50,6 +50,5 @@ public class User {
 				+ ", mobileNumber=" + mobileNumber + ", gender=" + gender + ", createDate=" + createDate
 				+ ", updateDate=" + updateDate + "]";
 	}
-	
-	
+
 }

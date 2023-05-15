@@ -27,28 +27,28 @@ public class ElasticSearchController {
 		String response = elasticSearchQuery.createOrUpdateDocument(user);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
-	@GetMapping("/searchDocument")
-    public ResponseEntity<Object> searchAllDocument() throws IOException {
-        List<User> users = elasticSearchQuery.searchAllDocuments();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-	
-	@GetMapping("/searchByKeyword")
-    public ResponseEntity<Object> searching(@RequestParam String keyword) throws IOException{
-		List<User> users = elasticSearchQuery.searchByKeyword(keyword);
-         return new ResponseEntity<>(users,HttpStatus.OK);
-    }
-	
-    @GetMapping("/getDocument")
-    public ResponseEntity<Object> getDocumentById(@RequestParam String userId) throws IOException {
-       User user =  elasticSearchQuery.getDocumentById(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
 
-    @DeleteMapping("/deleteDocument")
-    public ResponseEntity<Object> deleteDocumentById(@RequestParam String userId) throws IOException {
-        String response =  elasticSearchQuery.deleteDocumentById(userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@GetMapping("/searchDocument")
+	public ResponseEntity<Object> searchAllDocument() throws IOException {
+		List<User> users = elasticSearchQuery.searchAllDocuments();
+		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@GetMapping("/searchByKeyword")
+	public ResponseEntity<Object> searching(@RequestParam String keyword) throws IOException {
+		List<User> users = elasticSearchQuery.searchByKeyword(keyword);
+		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@GetMapping("/getDocument")
+	public ResponseEntity<Object> getDocumentById(@RequestParam String userId) throws IOException {
+		User user = elasticSearchQuery.getDocumentById(userId);
+		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/deleteDocument")
+	public ResponseEntity<Object> deleteDocumentById(@RequestParam String userId) throws IOException {
+		String response = elasticSearchQuery.deleteDocumentById(userId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

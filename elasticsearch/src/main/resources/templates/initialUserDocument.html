@@ -15,7 +15,7 @@
 	href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
 	integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
 	crossorigin="anonymous">
-<title>Update User Details</title>
+<title>Create New User</title>
 
 <style>
 .card-registration .select-input.form-control[readonly]:not([disabled])
@@ -38,7 +38,7 @@
 
 						<div class="row">
 							<div class="col-md-11 mb-5">
-								<h3>Update User Details</h3>
+								<h3>Create User</h3>
 							</div>
 							<div class="col-md-1 mb-5 pb-4">
 								<a href="/userdashboard" class="fas fa-home"></a>
@@ -53,13 +53,13 @@
 							<th:block th:text="${#session.removeAttribute('message')}"></th:block>
 						</div>
 
-						<form action="#" th:action="@{/saveUser}" th:object="${user}"
-							method="post">
+						<form th:action="@{/createUser}" th:object="${user}" method="post">
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-6 mb-4">
 									<div class="form-outline">
-										<input type="hidden" th:field="*{id}" id="id"
-											class="form-control form-control-lg" name="id" />
+										<label for="userID">User ID</label> <input type="text" id="id"
+											value="USER-" class="form-control form-control-lg" name="id"
+											required />
 									</div>
 								</div>
 							</div>
@@ -67,15 +67,14 @@
 								<div class="col-md-6 mb-4">
 									<div class="form-outline">
 										<label for="firstName">First Name</label> <input type="text"
-											th:field="*{firstName}" id="firstName"
-											class="form-control form-control-lg" name="firstName"
-											required />
+											id="firstName" class="form-control form-control-lg"
+											name="firstName" required />
 									</div>
 								</div>
 								<div class="col-md-6 mb-4">
 									<div class="form-outline">
 										<label class="form-label" for="lastName">Last Name</label> <input
-											type="text" th:field="*{lastName}" id="lastName"
+											type="text" id="lastName"
 											class="form-control form-control-lg" name="lastName" required />
 									</div>
 								</div>
@@ -86,17 +85,17 @@
 									<h6 class="mb-2 pb-2">Gender:</h6>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="gender"
-											th:field="*{gender}" id="femaleGender" value="female" /> <label
+											id="femaleGender" value="female" /> <label
 											class="form-check-label" for="femaleGender">Female</label>
 									</div>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="gender"
-											th:field="*{gender}" id="maleGender" value="male" /> <label
+											id="maleGender" value="male" /> <label
 											class="form-check-label" for="maleGender">Male</label>
 									</div>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name=gender
-											th:field="*{gender}" id="otherGender" value="other" /> <label
+											id="otherGender" value="other" /> <label
 											class="form-check-label" for="otherGender">Other</label>
 									</div>
 								</div>
@@ -106,16 +105,17 @@
 								<div class="col-md-6 mb-4 pb-2">
 									<div class="form-outline">
 										<label for="email">Email ID</label> <input type="email"
-											th:field="*{email}" id="email"
-											class="form-control form-control-lg" name="email" required />
+											id="email" class="form-control form-control-lg" name="email"
+											required />
 									</div>
 								</div>
 								<div class="col-md-6 mb-4 pb-2">
 									<div class="form-outline">
 										<label for="mobileNumber">Mobile Number</label> <input
-											type="text" th:field="*{mobileNumber}" id="mobileNumber"
+											type="text" id="mobileNumber" maxlength="10"
+											pattern="[1-9]{1}[0-9]{9}"
 											class="form-control form-control-lg" name="mobileNumber"
-											maxlength="10" pattern="[1-9]{1}[0-9]{9}" required />
+											required />
 									</div>
 								</div>
 							</div>
@@ -124,21 +124,22 @@
 								<div class="col-md-6">
 									<div class="form-outline">
 										<input type="hidden" class="form-control form-control-lg"
-											th:field="*{createDate}" name="createDate" />
+											th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+											name="createDate" required />
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-outline">
 										<input type="hidden" class="form-control form-control-lg"
 											th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-											name="updateDate">
+											name="updateDate" />
 									</div>
 								</div>
 							</div>
 
 							<div class="mt-4 pt-2">
 								<input class="btn btn-primary btn-lg" type="submit"
-									value="Save Changes" />
+									value="Submit" />
 							</div>
 						</form>
 					</div>

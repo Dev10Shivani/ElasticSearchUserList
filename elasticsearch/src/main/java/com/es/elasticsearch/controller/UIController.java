@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.es.elasticsearch.Repository.ElasticSearchQuery;
+import com.es.elasticsearch.Repository.UserRepository;
 import com.es.elasticsearch.entity.User;
+import com.es.elasticsearch.entity.UserData;
 
 @Controller
 public class UIController {
@@ -21,7 +23,23 @@ public class UIController {
 	@Autowired
 	private ElasticSearchQuery elasticSearchQuery;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@GetMapping("/")
+	public String viewUserPage() throws IOException {
+		return "initialUserDocument";
+	}
+
+	@PostMapping("/createUser")
+	public String createUser(@ModelAttribute UserData userData, @ModelAttribute User user, HttpSession session)
+			throws IOException {
+		saveData(userData, user, session);
+		session.setAttribute("message", "User created successfully..");
+		return "initialUserDocument.html";
+	}
+
+	@GetMapping("/userdashboard")
 	public String viewHomePage(Model model, String keyword) throws IOException {
 		System.out.println("keyword : " + keyword);
 		if (keyword != null) {
@@ -33,17 +51,27 @@ public class UIController {
 	}
 
 	@PostMapping("/addUser")
-	public String addUser(@ModelAttribute User user, HttpSession session) throws IOException {
-		System.out.println(user);
-		elasticSearchQuery.createOrUpdateDocument(user);
+	public String addUser(@ModelAttribute UserData userData, @ModelAttribute User user, HttpSession session)
+			throws IOException {
+		saveData(userData, user, session);
 		session.setAttribute("message", "User created successfully..");
 		return "newUserDocument.html";
 	}
 
+	public void saveData(@ModelAttribute UserData userData, @ModelAttribute User user, HttpSession session)
+			throws IOException {
+		try {
+			elasticSearchQuery.createOrUpdateDocument(user);
+		} catch (Exception e) {
+			userRepository.save(userData);
+			session.setAttribute("message", "Saved changes successfully.. " + e);
+		}
+	}
+
 	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute User user, HttpSession session) throws IOException {
-		System.out.println(user);
-		elasticSearchQuery.createOrUpdateDocument(user);
+	public String saveUser(@ModelAttribute UserData userData, @ModelAttribute User user, HttpSession session)
+			throws IOException {
+		saveData(userData, user, session);
 		session.setAttribute("message", "User Updated successfully..");
 		return "updateUserDocument.html";
 	}
@@ -63,9 +91,10 @@ public class UIController {
 	}
 
 	@GetMapping("/deleteUser/{id}")
-	public String deleteUser(@PathVariable(value = "id") String id) throws IOException {
+	public String deleteUser(@PathVariable(value = "id") String id, HttpSession session) throws IOException {
 		this.elasticSearchQuery.deleteDocumentById(id);
-		return "redirect:/";
+		session.setAttribute("message", "User " + id + " Deleted sucessfully. Please refresh the page");
+		return "index.html";
 	}
 
 	@GetMapping("/fetchUser/{id}")
