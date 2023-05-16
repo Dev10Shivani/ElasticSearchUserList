@@ -27,12 +27,12 @@ public class FailedFetchScheduler {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Scheduled(cron = "0 * * ? * *") // runs every hour
+	@Scheduled(cron = "0 0 * ? * *") // runs every hour
 	public void updateFailedUpdates() throws IOException {
 		User user = new User();
 		List<UserData> userlist = userRepository.findAll();
 
-		if(!userlist.isEmpty() && userlist.size() > 0) {
+		if (!userlist.isEmpty() && userlist.size() > 0) {
 			for (UserData u : userlist) {
 				user.setId(u.getId());
 				user.setFirstName(u.getFirstName());
@@ -44,8 +44,8 @@ public class FailedFetchScheduler {
 				elasticSearchQuery.createOrUpdateDocument(user);
 			}
 			userRepository.deleteAll();
-		}else {
+		} else {
 			LOGGER.info("No data available to fetch");
-		}	
+		}
 	}
 }

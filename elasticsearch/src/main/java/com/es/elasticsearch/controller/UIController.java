@@ -1,16 +1,20 @@
 package com.es.elasticsearch.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.es.elasticsearch.Repository.ElasticSearchQuery;
 import com.es.elasticsearch.Repository.UserRepository;
@@ -40,12 +44,27 @@ public class UIController {
 	}
 
 	@GetMapping("/userdashboard")
-	public String viewHomePage(Model model, String keyword) throws IOException {
-		System.out.println("keyword : " + keyword);
+	public String viewHomePage(Model model, String keyword, @RequestParam(defaultValue = "0") int page)
+			throws IOException {
+
 		if (keyword != null) {
 			model.addAttribute("listUserDocuments", elasticSearchQuery.searchByKeyword(keyword));
+			
+			List<User> userlist = elasticSearchQuery.searchByKeyword(keyword);
+			Page<User> users = elasticSearchQuery.findPaginated(page, 10);
+			//model.addAttribute("listUserDocuments", users);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", users.getTotalPages());
+			model.addAttribute("totalItems", userlist.size());
 		} else {
 			model.addAttribute("listUserDocuments", elasticSearchQuery.searchAllDocuments());
+
+			Page<User> users = elasticSearchQuery.findPaginated(page, 10);
+			//model.addAttribute("listUserDocuments", users);
+			model.addAttribute("currentPage", page);
+			model.addAttribute("totalPages", users.getTotalPages());
+			model.addAttribute("totalItems", users.getTotalElements());
+
 		}
 		return "index.html";
 	}

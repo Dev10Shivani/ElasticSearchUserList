@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
 	@Id
+	@Field(type = FieldType.Keyword, name = "id")
 	private String id;
 
 	@Field(type = FieldType.Text, name = "firstName")

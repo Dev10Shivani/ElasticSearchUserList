@@ -53,12 +53,12 @@ table th:nth-child(3), td:nth-child(3) {
 				<section class="w-100 p-4 pb-4">
 
 					<div class="row">
-						<div class="col-md-2 mb-5">
+						<div class="col-md-2 mb-3">
 							<a th:href="@{/showCreateUserForm}" class="btn btn-primary">Create
 								New User</a>
 						</div>
 
-						<div class="col-md-9 mb-5">
+						<div class="col-md-9 mb-3">
 							<form th:action="@{/userdashboard}" method="get">
 								<div class="input-group">
 									<span class="input-group-prepend">
@@ -96,6 +96,7 @@ table th:nth-child(3), td:nth-child(3) {
 								<thead class="datatable-header">
 									<tr>
 										<th scope="col">Id</th>
+										<!-- <a th:href ="@{/userdashboard/id}"> -->
 										<th scope="col">Name</th>
 										<th scope="col">Email ID</th>
 										<th scope="col">Mobile Number</th>
@@ -119,9 +120,37 @@ table th:nth-child(3), td:nth-child(3) {
 									</tr>
 								</tbody>
 							</table>
+
+							<div class="pagination">
+								<div class="row col-sm-10">
+									<div class="col-sm-2">Total Rows : [[${totalItems}]]</div>
+									<div class="col-sm-1">
+										<span th:class="${currentPage == 0} ? disabled : ''"> <a
+											th:href="@{/userdashboard?page=0}">First</a>
+										</span>
+									</div>
+									<div class="col-sm-1">
+										<span th:class="${currentPage == 0} ? disabled : ''"> <a
+											th:href="@{/userdashboard(page=${currentPage - 1})}">&lt;</a>
+										</span>
+									</div>
+									<div class="col-sm-1">
+										<span
+											th:class="${currentPage == totalPages - 1} ? disabled : ''">
+											<a th:href="@{/userdashboard(page=${currentPage + 1})}">&gt;</a>
+										</span>
+									</div>
+									<div class="col-sm-1">
+										<span
+											th:class="${currentPage == totalPages - 1} ? disabled : ''">
+											<a th:href="@{/userdashboard(page=${totalPages - 1})}">Last</a>
+										</span>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</div>
-
 				</section>
 			</div>
 		</section>

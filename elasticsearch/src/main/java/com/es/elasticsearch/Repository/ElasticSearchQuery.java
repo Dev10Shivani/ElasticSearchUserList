@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import com.es.elasticsearch.entity.User;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.DeleteResponse;
 import co.elastic.clients.elasticsearch.core.GetResponse;
@@ -24,6 +28,9 @@ public class ElasticSearchQuery {
 
 	@Autowired
 	private ElasticsearchClient elasticsearchClient;
+	
+	@Autowired
+	private UserESRepository userESRepository;
 
 	private final String indexName = "userinformation_elasticsearch";
 
@@ -41,7 +48,10 @@ public class ElasticSearchQuery {
 	public List<User> searchAllDocuments() throws IOException {
 
 		SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName));
-		SearchResponse searchResponse = elasticsearchClient.search(searchRequest, User.class);
+		SearchResponse searchResponse = elasticsearchClient.search(s -> {
+			return s.index(indexName).from(0).size(10)
+					.sort(so -> so.field(FieldSort.of(f -> f.field("id.keyword").order(SortOrder.Asc))));
+		}, User.class);
 		List<Hit> hits = searchResponse.hits().hits();
 		List<User> users = new ArrayList<>();
 		for (Hit object : hits) {
@@ -50,9 +60,15 @@ public class ElasticSearchQuery {
 		}
 		return users;
 	}
+	
+	public Page<User> findPaginated(int pageNo, int pageSize) {
+		PageRequest pageable = PageRequest.of(pageNo, pageSize);
+		return this.userESRepository.findAll(pageable);
+	}
 
 	public List<User> searchByKeyword(String keyword) throws IOException {
-		SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName)
+		SearchRequest searchRequest = SearchRequest.of(s -> s.index(indexName).size(10)
+				.sort(so -> so.field(FieldSort.of(f -> f.field("id.keyword").order(SortOrder.Asc))))
 				.query(q -> q.multiMatch(t -> t.fields("firstName", "lastName", "email").query(keyword))));
 		SearchResponse searchResponse = elasticsearchClient.search(searchRequest, User.class);
 		List<Hit> hits = searchResponse.hits().hits();
@@ -88,18 +104,5 @@ public class ElasticSearchQuery {
 		}
 		System.out.println("User not found");
 		return new StringBuilder("User with id " + deleteResponse.id() + " does not exist.").toString();
-
 	}
-
-	/*
-	 * public List<User> findAllWithSort(String field, String Direction){
-	 * Sort.by(field).ascending() : Sort.by(field).descending(); return
-	 * user.findAll(sort); }
-	 */
-
-	/*
-	 * public Page<User> findPage(int pageNumber) { Pageable pagable =
-	 * PageRequest.of(pageNumber - 1, 10); return null; }
-	 */
-
 }
